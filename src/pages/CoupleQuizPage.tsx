@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Pressable, ScrollView } from 'react-native';
 import Animated, {
   FadeIn,
@@ -16,13 +16,22 @@ import { quiz } from '../content/story';
 import { colors, fonts } from '../theme/tokens';
 
 export function CoupleQuizPage() {
-  const { hasVisitedPage } = useBook();
+  const { hasVisitedPage, setNavHidden } = useBook();
   const hasVisited = hasVisitedPage(5);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [wrongGuesses, setWrongGuesses] = useState<Set<number>>(new Set());
   const [answeredCorrectly, setAnsweredCorrectly] = useState(false);
   const [wrongFeedback, setWrongFeedback] = useState('');
   const [quizFinished, setQuizFinished] = useState(false);
+
+  useEffect(() => {
+    if (answeredCorrectly && !quizFinished) {
+      setNavHidden(true);
+    } else {
+      setNavHidden(false);
+    }
+    return () => setNavHidden(false);
+  }, [answeredCorrectly, quizFinished, setNavHidden]);
 
   const question = quiz.questions[currentQuestionIndex];
 
@@ -51,6 +60,14 @@ export function CoupleQuizPage() {
     } else {
       setQuizFinished(true);
     }
+  };
+
+  const handleRestart = () => {
+    setCurrentQuestionIndex(0);
+    setWrongGuesses(new Set());
+    setAnsweredCorrectly(false);
+    setWrongFeedback('');
+    setQuizFinished(false);
   };
 
   return (
@@ -93,41 +110,47 @@ export function CoupleQuizPage() {
                 {wrongFeedback}
               </Animated.Text>
             )}
-
-            {answeredCorrectly && (
-              <Animated.View
-                entering={FadeInDown.duration(600).springify()}
-                style={styles.successArea}
-              >
-                <Text style={styles.successFeedback}>
-                  {question.feedbackSuccess}
-                </Text>
-
-                <Animated.View entering={ZoomIn.delay(300).springify()}>
-                  <Polaroid
-                    source={question.rewardPhoto}
-                    caption={question.rewardCaption}
-                    width={220}
-                    rotation={-2}
-                  />
-                </Animated.View>
-
-                <Pressable onPress={handleNext} style={styles.nextButton}>
-                  <Text style={styles.nextButtonText}>
-                    {currentQuestionIndex < quiz.questions.length - 1
-                      ? 'Próxima Pergunta ›'
-                      : 'Ver Resultado'}
-                  </Text>
-                </Pressable>
-              </Animated.View>
-            )}
           </Animated.View>
         ) : (
           <Animated.View entering={FadeIn.duration(600)} style={styles.finaleArea}>
             <Text style={styles.finaleText}>{quiz.finale}</Text>
+            <Pressable onPress={handleRestart} style={styles.restartButton}>
+              <Text style={styles.restartButtonText}>Refazer Quiz ↺</Text>
+            </Pressable>
           </Animated.View>
         )}
       </ScrollView>
+
+      {/* OVERLAY DE SUCESSO */}
+      {answeredCorrectly && !quizFinished && (
+        <Animated.View
+          entering={FadeIn.duration(400)}
+          style={styles.overlayContainer}
+        >
+          <Animated.Text entering={FadeInDown.delay(200)} style={styles.successFeedbackOverlay}>
+            {question.feedbackSuccess}
+          </Animated.Text>
+
+          <Animated.View entering={ZoomIn.delay(400).springify()}>
+            <Polaroid
+              source={question.rewardPhoto}
+              caption={question.rewardCaption}
+              width={260}
+              rotation={-2}
+            />
+          </Animated.View>
+
+          <Animated.View entering={FadeIn.delay(600)}>
+            <Pressable onPress={handleNext} style={styles.nextButtonOverlay}>
+              <Text style={styles.nextButtonTextOverlay}>
+                {currentQuestionIndex < quiz.questions.length - 1
+                  ? 'Próxima Pergunta ›'
+                  : 'Ver Resultado'}
+              </Text>
+            </Pressable>
+          </Animated.View>
+        </Animated.View>
+      )}
     </View>
   );
 }
@@ -276,31 +299,47 @@ const styles = StyleSheet.create({
     marginTop: 16,
     textAlign: 'center',
   },
-  successArea: {
-    width: '100%',
+  overlayContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(253, 248, 245, 0.95)', // Semi-transparent paper color
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 24,
+    zIndex: 100,
+    elevation: 10,
+    padding: 20,
   },
-  successFeedback: {
+  successFeedbackOverlay: {
     fontFamily: fonts.caveatBold,
-    fontSize: 28,
+    fontSize: 34,
     color: '#2e6b3c',
-    marginBottom: 20,
+    marginBottom: 30,
     textAlign: 'center',
+    textShadowColor: 'rgba(255,255,255,0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
-  nextButton: {
-    marginTop: 30,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+  nextButtonOverlay: {
+    marginTop: 40,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
     backgroundColor: '#9c4d5d',
-    borderRadius: 20,
+    borderRadius: 24,
+    shadowColor: '#9c4d5d',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
   },
-  nextButtonText: {
+  nextButtonTextOverlay: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 14,
+    fontSize: 16,
     color: '#fff',
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
   finaleArea: {
     flex: 1,
@@ -312,5 +351,21 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: '#9c4d5d',
     textAlign: 'center',
+    marginBottom: 24,
+  },
+  restartButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#9c4d5d',
+  },
+  restartButtonText: {
+    fontFamily: fonts.nunitoBold,
+    fontSize: 14,
+    color: '#9c4d5d',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
 });

@@ -4,6 +4,8 @@ export const BookContext = createContext({
   currentIndex: 0,
   isFlipping: false,
   pageCount: 8,
+  isNavHidden: false,
+  setNavHidden: (_hidden: boolean) => {},
   goNext: () => {},
   goPrev: () => {},
   goTo: (_index: number) => {},

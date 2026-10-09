@@ -40,7 +40,7 @@ export const thingsILove: ListChapter = {
     },
     {
       emoji: "🫂",
-      text: "A sensação de paz e acolhimento que só o seu abraço consegue me dar",
+      text: "A sensação de paz e acolhimento que o seu abraço consegue me dar",
     },
     {
       emoji: "💬",
@@ -49,10 +49,6 @@ export const thingsILove: ListChapter = {
     {
       emoji: "🥰",
       text: "O brilho e o carinho no seu olhar toda vez que nos reencontramos",
-    },
-    {
-      emoji: "☕",
-      text: "A sua parceria e companheirismo até nos dias mais comuns da rotina",
     },
     {
       emoji: "💌",
@@ -82,19 +78,7 @@ export const somethingChanged: ListChapter = {
     },
     {
       emoji: "🌙",
-      text: "A calma instantânea que me dá só de deitar e conversar contigo",
-    },
-    {
-      emoji: "✨",
-      text: "O futuro deixar de ser uma dúvida e virar um plano juntos",
-    },
-    {
-      emoji: "🎶",
-      text: "Encontrar versos nossos em músicas que antes passavam batido",
-    },
-    {
-      emoji: "📖",
-      text: "Rever nossas primeiras fotos e ver o quanto já construímos",
+      text: "A calma instantânea que me dá só de conversar contigo",
     },
     { emoji: "☀️", text: "Começar o dia já querendo saber se você dormiu bem" },
   ],
@@ -152,8 +136,8 @@ export const quiz = {
     },
     {
       question: "Qual foi a nossa primeira viagem juntos?",
-      options: ["Praia", "Serra", "Cidade grande"],
-      correctIndex: 0,
+      options: ["Shopping", "Guaramiranga", "Canoa Quebrada"],
+      correctIndex: 2,
       rewardPhoto: PHOTOS.quiz02,
       rewardCaption: "Que viagem boa ✨",
       feedbackSuccess: "Memória de elefante! 🐘",
@@ -168,7 +152,7 @@ export const quiz = {
     },
     {
       question: "Onde foi o nosso primeiro beijo?",
-      options: ["Cinema", "Praça", "Em casa", "Restaurante"],
+      options: ["Cinema", "Shopping", "Em casa", "Restaurante"],
       correctIndex: 1,
       rewardPhoto: PHOTOS.quiz04,
       rewardCaption: "Pra sempre lembrado 😘",

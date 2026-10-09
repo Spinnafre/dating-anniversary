@@ -17,6 +17,7 @@ const EASING_CURVE = Easing.bezier(0.25, 0.1, 0.25, 1);
 
 export function BookFlipper() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isNavHidden, setNavHidden] = useState(false);
   const [flip, setFlip] = useState<{ from: number; to: number; direction: 'next' | 'prev' } | null>(null);
   const [visitedIndexes, setVisitedIndexes] = useState<Set<number>>(new Set([0]));
 
@@ -128,6 +129,8 @@ export function BookFlipper() {
     currentIndex,
     isFlipping: flip !== null,
     pageCount: pages.length,
+    isNavHidden,
+    setNavHidden,
     goNext,
     goPrev,
     goTo,
@@ -157,7 +160,7 @@ export function BookFlipper() {
         })}
 
         {/* Navegação por setas (por cima de tudo) */}
-        <BookNav />
+        {!isNavHidden && <BookNav />}
       </View>
     </BookContext.Provider>
   );
