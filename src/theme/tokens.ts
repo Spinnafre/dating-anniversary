@@ -1,0 +1,32 @@
+export const colors = {
+  leather: ['#38241f', '#241715', '#190f0e'],
+  gold: '#d4af37',
+  goldFrame: 'rgba(212,175,55,0.65)',
+  pinkBgFrom: '#ffeef2',
+  pinkBgTo: '#f7dbe3',
+  paper: '#fdfaf2',
+  paperLine: '#e3edf5',
+  paperMargin: '#f7cfcf',
+  ink: '#3b2219',
+  cream: '#FAF6F0',
+  creamBorder: '#E3D9CE',
+  wine: '#A83232',
+  textMain: '#2C2421',
+  letterBg: '#faf7f2',
+  letterInk: '#4a3b32',
+  waxSeal: '#c94a53',
+  waxShadow: '#8f2c33',
+  scratchBg: '#fce7ee',
+  scratchHeart: '#f39bb4',
+  polaroid: '#fcfbf9',
+  caption: '#2b2b2b',
+} as const;
+
+export const fonts = {
+  cinzel: 'Cinzel_700Bold',
+  cormorant: 'CormorantGaramond_400Regular_Italic',
+  caveat: 'Caveat_400Regular',
+  caveatBold: 'Caveat_700Bold',
+  nunito: 'Nunito_400Regular',
+  nunitoBold: 'Nunito_700Bold',
+} as const;
