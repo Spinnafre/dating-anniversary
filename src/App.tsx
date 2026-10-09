@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Asset } from 'expo-asset';
 import * as SplashScreen from 'expo-splash-screen';
@@ -13,6 +12,7 @@ import {
 import { Caveat_400Regular, Caveat_700Bold } from '@expo-google-fonts/caveat';
 import { Nunito_400Regular, Nunito_700Bold } from '@expo-google-fonts/nunito';
 import { PHOTOS } from './content/photos';
+import { BookFlipper } from './book/BookFlipper';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -45,11 +45,8 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayout}>
       <SafeAreaProvider>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          {/* TODO: <BookFlipper /> (etapa 2) */}
-          <Text>Livro de Memórias</Text>
-        </View>
-        <StatusBar style="auto" />
+        <BookFlipper />
+        <StatusBar style="light" />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
