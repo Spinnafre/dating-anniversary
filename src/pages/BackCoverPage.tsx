@@ -4,6 +4,7 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import Svg, { Circle, Defs, Pattern, Rect } from "react-native-svg";
 
 import { useBook } from "../book/BookContext";
+import { NavButton } from "../components/NavButton";
 import { HeartShower } from "../components/HeartShower";
 import { backCover, START_DATE } from "../content/story";
 import { useElapsedTime } from "../hooks/useElapsedTime";
@@ -111,11 +112,11 @@ export function BackCoverPage() {
                 </Text>
               </Pressable>
 
-              <Pressable onPress={() => goTo(0)} style={styles.replayButton}>
-                <Text style={styles.replayButtonText}>
-                  {backCover.replayButton}
-                </Text>
-              </Pressable>
+              <NavButton 
+                label={backCover.replayButton} 
+                variant="text" 
+                onPress={() => goTo(0)} 
+              />
             </View>
 
             <Text style={styles.footer}>{backCover.footer}</Text>
@@ -276,15 +277,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#fff",
     letterSpacing: 1,
-  },
-  replayButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  replayButtonText: {
-    fontFamily: fonts.nunitoBold,
-    fontSize: 13,
-    color: "rgba(59,34,25,0.6)",
   },
   footer: {
     fontFamily: fonts.cormorant,

@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBook } from './BookContext';
-import { colors, fonts } from '../theme/tokens';
+import { NavButton } from '../components/NavButton';
 
 export function BookNav() {
   const { currentIndex, pageCount, goNext, goPrev } = useBook();
@@ -15,25 +15,14 @@ export function BookNav() {
       {/* Botão Voltar (‹) */}
       <View style={styles.buttonContainer}>
         {!isCover && (
-          <Pressable onPress={goPrev} style={styles.circleButton}>
-            <Text style={styles.arrow}>‹</Text>
-          </Pressable>
+          <NavButton label="‹" variant="circle" onPress={goPrev} />
         )}
       </View>
 
       {/* Botão Avançar (›) */}
       <View style={styles.buttonContainer}>
-        {!isBackCover && (
-          <Pressable 
-            onPress={goNext} 
-            style={isCover ? styles.openButton : styles.circleButton}
-          >
-            {isCover ? (
-              <Text style={styles.openText}>Abrir ›</Text>
-            ) : (
-              <Text style={styles.arrow}>›</Text>
-            )}
-          </Pressable>
+        {!isBackCover && !isCover && (
+          <NavButton label="›" variant="circle" onPress={goNext} />
         )}
       </View>
     </View>
@@ -57,32 +46,5 @@ const styles = StyleSheet.create({
   buttonContainer: {
     minWidth: 60,
     alignItems: 'center',
-  },
-  circleButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(0,0,0,0.15)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  openButton: {
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(0,0,0,0.15)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-  },
-  arrow: {
-    fontSize: 24,
-    lineHeight: 28,
-    color: '#fff',
-    fontFamily: fonts.nunitoBold,
-  },
-  openText: {
-    fontFamily: fonts.cinzel,
-    fontSize: 14,
-    color: colors.gold,
   },
 });
