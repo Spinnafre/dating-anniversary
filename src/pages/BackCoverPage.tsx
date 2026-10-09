@@ -10,7 +10,8 @@ import { useElapsedTime } from "../hooks/useElapsedTime";
 import { colors, fonts } from "../theme/tokens";
 
 export function BackCoverPage() {
-  const { goTo } = useBook();
+  const { goTo, hasVisitedPage } = useBook();
+  const hasVisited = hasVisitedPage(7);
   const elapsed = useElapsedTime(START_DATE);
   const [showerTrigger, setShowerTrigger] = useState(0);
 
@@ -44,7 +45,7 @@ export function BackCoverPage() {
         showsVerticalScrollIndicator={false}
       >
         <Animated.View
-          entering={FadeIn.duration(800)}
+          entering={hasVisited ? undefined : FadeIn.duration(800)}
           style={styles.outerBorder}
         >
           <View style={styles.innerBorder}>

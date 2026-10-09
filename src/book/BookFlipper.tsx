@@ -1,28 +1,29 @@
-import { useState } from 'react';
-import { StyleSheet, View, useWindowDimensions, BackHandler } from 'react-native';
-import Animated, {
+import { useState, useEffect } from 'react';
+import { StyleSheet, View, BackHandler } from 'react-native';
+import {
   Easing,
-  interpolate,
   runOnJS,
-  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import { BookContext } from './BookContext';
 import { BookNav } from './BookNav';
 import { pages } from './pages';
-import { useEffect } from 'react';
+import { PageWrapper } from './PageWrapper';
 
-const DURATION = 700;
+const DURATION = 950;
+const EASING_CURVE = Easing.bezier(0.25, 0.1, 0.25, 1);
 
 export function BookFlipper() {
-  const { width } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flip, setFlip] = useState<{ from: number; to: number; direction: 'next' | 'prev' } | null>(null);
+  const [visitedIndexes, setVisitedIndexes] = useState<Set<number>>(new Set([0]));
 
   const flipAngle = useSharedValue(0);
+  const flipFrom = useSharedValue(-1);
+  const flipTo = useSharedValue(-1);
+  const sharedCurrentIndex = useSharedValue(0);
 
   useEffect(() => {
     const backAction = () => {
@@ -34,102 +35,126 @@ export function BookFlipper() {
     };
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
-  }, [currentIndex]);
+  }, [currentIndex, flip]);
+
+  const finishFlip = (newIndex: number) => {
+    sharedCurrentIndex.value = newIndex;
+    flipFrom.value = -1;
+    flipTo.value = -1;
+    setCurrentIndex(newIndex);
+    setFlip(null);
+    // Ao voltar para a capa (reiniciar o livro), reseta as páginas visitadas para recarregar tudo limpo
+    if (newIndex === 0) {
+      setVisitedIndexes(new Set([0]));
+    }
+  };
 
   const goNext = () => {
     if (flip || currentIndex >= pages.length - 1) return;
-    setFlip({ from: currentIndex, to: currentIndex + 1, direction: 'next' });
+    const nextIndex = currentIndex + 1;
+    setVisitedIndexes((prev) => new Set(prev).add(nextIndex));
+
+    sharedCurrentIndex.value = currentIndex;
+    flipFrom.value = currentIndex;
+    flipTo.value = nextIndex;
     flipAngle.value = 0;
-    flipAngle.value = withTiming(-90, { duration: DURATION, easing: Easing.inOut(Easing.cubic) }, () => {
-      runOnJS(finishFlip)(currentIndex + 1);
-    });
+    setFlip({ from: currentIndex, to: nextIndex, direction: 'next' });
+
+    flipAngle.value = withTiming(
+      -180,
+      { duration: DURATION, easing: EASING_CURVE },
+      (finished) => {
+        if (finished) {
+          runOnJS(finishFlip)(nextIndex);
+        }
+      }
+    );
   };
 
   const goPrev = () => {
     if (flip || currentIndex <= 0) return;
-    setFlip({ from: currentIndex, to: currentIndex - 1, direction: 'prev' });
-    flipAngle.value = -90;
-    flipAngle.value = withTiming(0, { duration: DURATION, easing: Easing.inOut(Easing.cubic) }, () => {
-      runOnJS(finishFlip)(currentIndex - 1);
-    });
+    const prevIndex = currentIndex - 1;
+    setVisitedIndexes((prev) => new Set(prev).add(prevIndex));
+
+    sharedCurrentIndex.value = currentIndex;
+    flipFrom.value = currentIndex;
+    flipTo.value = prevIndex;
+    flipAngle.value = -180;
+    setFlip({ from: currentIndex, to: prevIndex, direction: 'prev' });
+
+    flipAngle.value = withTiming(
+      0,
+      { duration: DURATION, easing: EASING_CURVE },
+      (finished) => {
+        if (finished) {
+          runOnJS(finishFlip)(prevIndex);
+        }
+      }
+    );
   };
 
   const goTo = (index: number) => {
     if (flip || index === currentIndex) return;
     const direction = index > currentIndex ? 'next' : 'prev';
+    if (index === 0) {
+      setVisitedIndexes(new Set([0, currentIndex]));
+    } else {
+      setVisitedIndexes((prev) => new Set(prev).add(index));
+    }
+
+    const startAngle = direction === 'next' ? 0 : -180;
+    const targetAngle = direction === 'next' ? -180 : 0;
+
+    sharedCurrentIndex.value = currentIndex;
+    flipFrom.value = currentIndex;
+    flipTo.value = index;
+    flipAngle.value = startAngle;
     setFlip({ from: currentIndex, to: index, direction });
-    flipAngle.value = direction === 'next' ? 0 : -90;
-    flipAngle.value = withTiming(direction === 'next' ? -90 : 0, { duration: DURATION, easing: Easing.inOut(Easing.cubic) }, () => {
-      runOnJS(finishFlip)(index);
-    });
+
+    flipAngle.value = withTiming(
+      targetAngle,
+      { duration: DURATION, easing: EASING_CURVE },
+      (finished) => {
+        if (finished) {
+          runOnJS(finishFlip)(index);
+        }
+      }
+    );
   };
 
-  const finishFlip = (newIndex: number) => {
-    setCurrentIndex(newIndex);
-    setFlip(null);
-    flipAngle.value = 0;
-  };
+  const hasVisitedPage = (index: number) => visitedIndexes.has(index);
 
   const contextValue = {
     currentIndex,
+    isFlipping: flip !== null,
     pageCount: pages.length,
     goNext,
     goPrev,
     goTo,
+    hasVisitedPage,
   };
-
-  const turningStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { perspective: 1200 },
-        { translateX: -width / 2 },
-        { rotateY: `${flipAngle.value}deg` },
-        { translateX: width / 2 },
-      ],
-      zIndex: 10,
-    };
-  });
-
-  const shadowStyle = useAnimatedStyle(() => {
-    // Escurece a página que vira, simulando a luz
-    const opacity = interpolate(flipAngle.value, [0, -90], [0, 0.4]);
-    return { opacity, backgroundColor: '#000' };
-  });
-
-  const dropShadowStyle = useAnimatedStyle(() => {
-    // Sombra projetada na página de baixo
-    const opacity = interpolate(flipAngle.value, [0, -90], [0.35, 0]);
-    return { opacity, backgroundColor: '#000' };
-  });
-
-  const activeIndex = flip ? flip.from : currentIndex;
-  const targetIndex = flip ? flip.to : currentIndex;
-
-  const ActivePage = pages[activeIndex];
-  const TargetPage = pages[targetIndex];
 
   return (
     <BookContext.Provider value={contextValue}>
       <View style={styles.container}>
-        
-        {/* Página de baixo (parada) */}
-        {flip && (
-          <View style={StyleSheet.absoluteFill} pointerEvents="none">
-            {flip.direction === 'next' ? <TargetPage /> : <ActivePage />}
-            <Animated.View style={[StyleSheet.absoluteFill, dropShadowStyle]} />
-          </View>
-        )}
+        {pages.map((PageComponent, idx) => {
+          const isVisited = visitedIndexes.has(idx);
+          if (!isVisited) return null;
 
-        {/* Página de cima (virando) */}
-        <Animated.View 
-          style={[StyleSheet.absoluteFill, turningStyle]}
-          pointerEvents={flip ? 'none' : 'auto'}
-        >
-          {flip ? (flip.direction === 'next' ? <ActivePage /> : <TargetPage />) : <ActivePage />}
-          
-          {/* Sombra de curvatura */}
-          {flip && <Animated.View style={[StyleSheet.absoluteFill, shadowStyle]} />}
-        </Animated.View>
+          return (
+            <PageWrapper
+              key={idx}
+              idx={idx}
+              currentIndex={currentIndex}
+              sharedCurrentIndex={sharedCurrentIndex}
+              isFlipping={flip !== null}
+              PageComponent={PageComponent}
+              flipFrom={flipFrom}
+              flipTo={flipTo}
+              flipAngle={flipAngle}
+            />
+          );
+        })}
 
         {/* Navegação por setas (por cima de tudo) */}
         <BookNav />
@@ -141,6 +166,6 @@ export function BookFlipper() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#FAF6F0',
   },
 });

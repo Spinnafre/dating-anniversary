@@ -1,12 +1,16 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { RadialGradient, Defs, Rect, Svg, Stop } from 'react-native-svg';
 
+import { useBook } from '../book/BookContext';
 import { TornPaper } from '../components/TornPaper';
 import { ListItemCard } from '../components/ListItemCard';
 import { somethingChanged } from '../content/story';
 import { colors, fonts } from '../theme/tokens';
 
 export function SomethingChangedPage() {
+  const { hasVisitedPage } = useBook();
+  const hasVisited = hasVisitedPage(2);
+
   return (
     <View style={styles.container}>
       <View style={StyleSheet.absoluteFill}>
@@ -44,7 +48,7 @@ export function SomethingChangedPage() {
 
           <View style={styles.list}>
             {somethingChanged.items.map((item, index) => (
-              <ListItemCard key={index} item={item} index={index} />
+              <ListItemCard key={index} item={item} index={index} hasVisited={hasVisited} />
             ))}
           </View>
 

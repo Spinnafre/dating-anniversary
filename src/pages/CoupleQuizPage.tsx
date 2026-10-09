@@ -10,11 +10,14 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { useBook } from '../book/BookContext';
 import { Polaroid } from '../components/Polaroid';
 import { quiz } from '../content/story';
 import { colors, fonts } from '../theme/tokens';
 
 export function CoupleQuizPage() {
+  const { hasVisitedPage } = useBook();
+  const hasVisited = hasVisitedPage(5);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [wrongGuesses, setWrongGuesses] = useState<Set<number>>(new Set());
   const [answeredCorrectly, setAnsweredCorrectly] = useState(false);
@@ -61,7 +64,7 @@ export function CoupleQuizPage() {
         {!quizFinished ? (
           <Animated.View
             key={`question-${currentQuestionIndex}`}
-            entering={FadeIn.duration(400)}
+            entering={hasVisited && currentQuestionIndex === 0 ? undefined : FadeIn.duration(400)}
             style={styles.quizArea}
           >
             <Text style={styles.counter}>

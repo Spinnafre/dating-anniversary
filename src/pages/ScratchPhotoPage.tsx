@@ -3,12 +3,15 @@ import { StyleSheet, Text, View, useWindowDimensions, PanResponder } from 'react
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import Svg, { Defs, Mask, Rect, Path } from 'react-native-svg';
 
+import { useBook } from '../book/BookContext';
 import { WashiTape } from '../components/WashiTape';
 import { Polaroid } from '../components/Polaroid';
 import { scratchPhoto } from '../content/story';
 import { colors, fonts } from '../theme/tokens';
 
 export function ScratchPhotoPage() {
+  const { hasVisitedPage } = useBook();
+  const hasVisited = hasVisitedPage(3);
   const { width } = useWindowDimensions();
   const [revealed, setRevealed] = useState(false);
   const [pathData, setPathData] = useState('');
@@ -115,7 +118,7 @@ export function ScratchPhotoPage() {
 
         <View style={styles.footer}>
           {revealed && (
-            <Animated.Text entering={FadeIn.duration(600)} style={styles.unlocked}>
+            <Animated.Text entering={hasVisited ? undefined : FadeIn.duration(600)} style={styles.unlocked}>
               Foto desbloqueada ✨
             </Animated.Text>
           )}

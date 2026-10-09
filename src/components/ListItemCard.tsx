@@ -8,9 +8,10 @@ import { ListItem } from '../content/story';
 interface ListItemCardProps {
   item: ListItem;
   index: number;
+  hasVisited?: boolean;
 }
 
-export function ListItemCard({ item, index }: ListItemCardProps) {
+export function ListItemCard({ item, index, hasVisited }: ListItemCardProps) {
   const isPressed = useSharedValue(false);
 
   const gesture = Gesture.Pan()
@@ -45,7 +46,7 @@ export function ListItemCard({ item, index }: ListItemCardProps) {
   });
 
   return (
-    <Animated.View entering={FadeInDown.delay(index * 100).duration(600)}>
+    <Animated.View entering={hasVisited ? undefined : FadeInDown.delay(index * 100).duration(600)}>
       <GestureDetector gesture={gesture}>
         <Animated.View
           style={[styles.card, animatedStyle]}

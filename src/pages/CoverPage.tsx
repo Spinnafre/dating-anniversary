@@ -3,6 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useBook } from '../book/BookContext';
 import { cover } from '../content/story';
 import { colors, fonts } from '../theme/tokens';
 
@@ -12,6 +13,8 @@ const GOLD_DARK = '#997825';
 /** Capa do livro: couro, lombada, moldura dourada dupla e título gravado. */
 export function CoverPage() {
   const insets = useSafeAreaInsets();
+  const { hasVisitedPage } = useBook();
+  const hasVisited = hasVisitedPage(0);
 
   return (
     <LinearGradient
@@ -41,10 +44,10 @@ export function CoverPage() {
             <Text style={[styles.ornament, styles.goldShadow]}>{cover.ornament}</Text>
 
             <Animated.View
-              entering={FadeIn.duration(900).delay(150)}
+              entering={hasVisited ? undefined : FadeIn.duration(900).delay(150)}
               style={styles.content}
             >
-              <Animated.Text entering={ZoomIn.duration(700)} style={[styles.fleur, styles.goldShadow]}>
+              <Animated.Text entering={hasVisited ? undefined : ZoomIn.duration(700)} style={[styles.fleur, styles.goldShadow]}>
                 ⚜
               </Animated.Text>
 

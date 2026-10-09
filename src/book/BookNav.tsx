@@ -21,13 +21,6 @@ export function BookNav() {
         )}
       </View>
 
-      {/* Indicador de página (só aparece dentro do livro) */}
-      {!isCover && !isBackCover && (
-        <Text style={styles.indicator}>
-          {currentIndex} / {pageCount - 2}
-        </Text>
-      )}
-
       {/* Botão Avançar (›) */}
       <View style={styles.buttonContainer}>
         {!isBackCover && (
@@ -91,10 +84,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.cinzel,
     fontSize: 14,
     color: colors.gold,
-  },
-  indicator: {
-    fontFamily: fonts.nunitoBold,
-    fontSize: 14,
-    color: 'rgba(0,0,0,0.4)',
   },
 });

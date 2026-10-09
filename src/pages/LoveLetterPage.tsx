@@ -14,12 +14,15 @@ import Animated, {
   ZoomIn,
 } from 'react-native-reanimated';
 
+import { useBook } from '../book/BookContext';
 import { letter, couple } from '../content/story';
 import { colors, fonts } from '../theme/tokens';
 import { useTypewriter } from '../hooks/useTypewriter';
 import { WashiTape } from '../components/WashiTape';
 
 export function LoveLetterPage() {
+  const { hasVisitedPage } = useBook();
+  const hasVisited = hasVisitedPage(6);
   const { width } = useWindowDimensions();
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -47,7 +50,7 @@ export function LoveLetterPage() {
       {/* Envelope Stylized */}
       <Pressable onPress={() => setModalVisible(true)}>
         <Animated.View
-          entering={ZoomIn.duration(600)}
+          entering={hasVisited ? undefined : ZoomIn.duration(600)}
           style={[
             styles.envelope,
             { width: envelopeWidth, height: envelopeHeight },
