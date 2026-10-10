@@ -131,14 +131,16 @@ export function CoupleQuizPage() {
             {question.feedbackSuccess}
           </Animated.Text>
 
-          <Animated.View entering={ZoomIn.delay(400).springify()}>
-            <Polaroid
-              source={question.rewardPhoto}
-              caption={question.rewardCaption}
-              width={260}
-              rotation={-2}
-            />
-          </Animated.View>
+          {question.rewardPhoto != null && (
+            <Animated.View entering={ZoomIn.delay(400).springify()}>
+              <Polaroid
+                source={question.rewardPhoto}
+                caption={question.rewardCaption ?? ''}
+                width={260}
+                rotation={-2}
+              />
+            </Animated.View>
+          )}
 
           <Animated.View entering={FadeIn.delay(600)}>
             <Pressable onPress={handleNext} style={styles.nextButtonOverlay}>

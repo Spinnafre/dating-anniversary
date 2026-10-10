@@ -1,15 +1,33 @@
-// require() estáticos: o Metro precisa dos caminhos literais.
-// Para trocar uma foto, substitua o arquivo de mesmo nome em assets/photos/.
+// O require.context permite carregar os arquivos de forma dinâmica no Metro
+const ctx = (require as any).context("../../assets/photos", false, /\.(webp|jpg)$/);
+
+function getPhoto(name: string) {
+  const webp = `./${name}.webp`;
+  const jpg = `./${name}.jpg`;
+  const keys = ctx.keys();
+
+  // Prioriza o formato .webp (foto real), faz fallback para .jpg (mock)
+  if (keys.includes(webp)) {
+    return ctx(webp);
+  }
+  if (keys.includes(jpg)) {
+    return ctx(jpg);
+  }
+
+  console.warn(`Foto não encontrada: ${name}`);
+  return null;
+}
+
 export const PHOTOS = {
-  cover: require('../../assets/photos/cover.jpg'),
-  favorite: require('../../assets/photos/favorite.jpg'),
-  deck01: require('../../assets/photos/deck01.jpg'),
-  deck02: require('../../assets/photos/deck02.jpg'),
-  deck03: require('../../assets/photos/deck03.jpg'),
-  deck04: require('../../assets/photos/deck04.jpg'),
-  deck05: require('../../assets/photos/deck05.jpg'),
-  quiz01: require('../../assets/photos/quiz01.jpg'),
-  quiz02: require('../../assets/photos/quiz02.jpg'),
-  quiz03: require('../../assets/photos/quiz03.jpg'),
-  quiz04: require('../../assets/photos/quiz04.jpg'),
+  cover: getPhoto("cover"),
+  favorite: getPhoto("favorite"),
+  deck01: getPhoto("deck01"),
+  deck02: getPhoto("deck02"),
+  deck03: getPhoto("deck03"),
+  deck04: getPhoto("deck04"),
+  deck05: getPhoto("deck05"),
+  deck06: getPhoto("deck06"),
+  deck07: getPhoto("deck07"),
+  quiz01: getPhoto("quiz01"),
+  quiz02: getPhoto("quiz02"),
 } as const;

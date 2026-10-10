@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,18 +7,14 @@ import {
   Modal,
   ScrollView,
   useWindowDimensions,
-} from 'react-native';
-import Animated, {
-  FadeIn,
-  FadeInUp,
-  ZoomIn,
-} from 'react-native-reanimated';
+} from "react-native";
+import Animated, { FadeIn, FadeInUp, ZoomIn } from "react-native-reanimated";
 
-import { useBook } from '../book/BookContext';
-import { letter, couple } from '../content/story';
-import { colors, fonts } from '../theme/tokens';
-import { useTypewriter } from '../hooks/useTypewriter';
-import { WashiTape } from '../components/WashiTape';
+import { useBook } from "../book/BookContext";
+import { letter, couple } from "../content/story";
+import { colors, fonts } from "../theme/tokens";
+import { useTypewriter } from "../hooks/useTypewriter";
+import { WashiTape } from "../components/WashiTape";
 
 export function LoveLetterPage() {
   const { hasVisitedPage } = useBook();
@@ -27,12 +23,12 @@ export function LoveLetterPage() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const fullLetterText = `${letter.greeting}\n\n${letter.paragraphs.join(
-    '\n\n'
+    "\n\n",
   )}\n\n${letter.signoff}`;
 
   const { displayedText, isFinished, skip } = useTypewriter(
-    modalVisible ? fullLetterText : '',
-    35
+    modalVisible ? fullLetterText : "",
+    35,
   );
 
   const envelopeWidth = width * 0.78;
@@ -40,10 +36,6 @@ export function LoveLetterPage() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.tapeWrapper}>
-        <WashiTape rotation={-2} width={110} />
-      </View>
-
       <Text style={styles.pageTitle}>Capítulo 6 · Carta de Amor</Text>
       <Text style={styles.hintText}>Toque no selo de cera para abrir 💌</Text>
 
@@ -61,7 +53,7 @@ export function LoveLetterPage() {
 
           {/* Selo de Cera */}
           <View style={styles.waxSeal}>
-            <Text style={styles.waxSealText}>{couple.sealInitial || '❦'}</Text>
+            <Text style={styles.waxSealText}>{couple.sealInitial || "❦"}</Text>
           </View>
         </Animated.View>
       </Pressable>
@@ -110,7 +102,9 @@ export function LoveLetterPage() {
                   onPress={() => setModalVisible(false)}
                   style={styles.doneButton}
                 >
-                  <Text style={styles.doneButtonText}>Guardar no Coração 💖</Text>
+                  <Text style={styles.doneButtonText}>
+                    Guardar no Coração 💖
+                  </Text>
                 </Pressable>
               </Animated.View>
             )}
@@ -124,68 +118,68 @@ export function LoveLetterPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f6f0ea',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#f6f0ea",
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 20,
   },
   tapeWrapper: {
-    position: 'absolute',
-    top: 40,
+    position: "absolute",
+    top: 160,
     zIndex: 10,
   },
   pageTitle: {
     fontFamily: fonts.nunitoBold,
     fontSize: 16,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     letterSpacing: 1.5,
-    color: '#9c4d5d',
+    color: "#9c4d5d",
     marginBottom: 8,
   },
   hintText: {
     fontFamily: fonts.caveat,
     fontSize: 22,
-    color: 'rgba(59,34,25,0.7)',
+    color: "rgba(59,34,25,0.7)",
     marginBottom: 40,
   },
   envelope: {
-    backgroundColor: '#faf7f2',
+    backgroundColor: "#faf7f2",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#e8ded2',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
+    borderColor: "#e8ded2",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.12,
     shadowRadius: 10,
     elevation: 6,
-    position: 'relative',
-    overflow: 'hidden',
+    position: "relative",
+    overflow: "hidden",
   },
   envelopeFlap: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     width: 0,
     height: 0,
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderLeftWidth: 140,
     borderRightWidth: 140,
     borderTopWidth: 90,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: '#f3ece2',
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderTopColor: "#f3ece2",
   },
   waxSeal: {
     width: 54,
     height: 54,
     borderRadius: 27,
     backgroundColor: colors.waxSeal,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 3,
-    borderColor: '#b53e46',
-    shadowColor: '#000',
+    borderColor: "#b53e46",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -195,52 +189,52 @@ const styles = StyleSheet.create({
   waxSealText: {
     fontFamily: fonts.cinzel,
     fontSize: 22,
-    color: '#fff',
+    color: "#fff",
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   letterPaper: {
-    width: '100%',
-    maxHeight: '85%',
+    width: "100%",
+    maxHeight: "85%",
     backgroundColor: colors.letterBg,
     borderRadius: 12,
     padding: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.25,
     shadowRadius: 15,
     elevation: 10,
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(59,34,25,0.1)',
+    borderBottomColor: "rgba(59,34,25,0.1)",
   },
   letterBadge: {
     fontFamily: fonts.nunitoBold,
     fontSize: 14,
-    color: '#9c4d5d',
-    textTransform: 'uppercase',
+    color: "#9c4d5d",
+    textTransform: "uppercase",
   },
   skipButton: {
     paddingVertical: 4,
     paddingHorizontal: 10,
-    backgroundColor: 'rgba(156,77,93,0.1)',
+    backgroundColor: "rgba(156,77,93,0.1)",
     borderRadius: 12,
   },
   skipText: {
     fontFamily: fonts.nunitoBold,
     fontSize: 12,
-    color: '#9c4d5d',
+    color: "#9c4d5d",
   },
   closeButton: {
     paddingVertical: 4,
@@ -249,7 +243,7 @@ const styles = StyleSheet.create({
   closeText: {
     fontFamily: fonts.nunitoBold,
     fontSize: 14,
-    color: 'rgba(59,34,25,0.6)',
+    color: "rgba(59,34,25,0.6)",
   },
   letterContent: {
     paddingVertical: 10,
@@ -262,17 +256,17 @@ const styles = StyleSheet.create({
   },
   modalFooter: {
     marginTop: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   doneButton: {
     paddingVertical: 12,
     paddingHorizontal: 24,
-    backgroundColor: '#9c4d5d',
+    backgroundColor: "#9c4d5d",
     borderRadius: 20,
   },
   doneButtonText: {
     fontFamily: fonts.nunitoBold,
     fontSize: 14,
-    color: '#fff',
+    color: "#fff",
   },
 });

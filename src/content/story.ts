@@ -90,8 +90,8 @@ export const scratchPhoto = {
   title: "Para mim essa é a nossa foto favorita",
   hint: "Raspe aqui com o seu dedo ✨",
   photo: PHOTOS.favorite,
-  note: "Melhor foto de todas ♡",
-  date: "08.10.2026",
+  note: "Combinando no look ♡",
+  date: "21.08.2026",
 };
 
 export const photoDeck = {
@@ -99,11 +99,13 @@ export const photoDeck = {
   title: "Momentos que a gente guarda",
   hint: "Arraste para o lado",
   photos: [
-    { source: PHOTOS.deck01, caption: "Viagem 2026 ✨" },
-    { source: PHOTOS.deck02, caption: "A tarde na praia" },
-    { source: PHOTOS.deck03, caption: "Bons momentos" },
-    { source: PHOTOS.deck04, caption: "Legenda 4" },
-    { source: PHOTOS.deck05, caption: "Legenda 5" },
+    { source: PHOTOS.deck01, caption: "Bem na hora da merendinha ✨" },
+    { source: PHOTOS.deck02, caption: "Em Guaramiranga" },
+    { source: PHOTOS.deck03, caption: "Foto na pracinha" },
+    { source: PHOTOS.deck04, caption: "Bem na hora do pôr do sol" },
+    { source: PHOTOS.deck05, caption: "Gatinha fofinha" },
+    { source: PHOTOS.deck06, caption: "Fotinha em canoa quebrada" },
+    { source: PHOTOS.deck07, caption: "Muito fofinha :)" },
   ],
 };
 
@@ -111,8 +113,8 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   correctIndex: number;
-  rewardPhoto: number;
-  rewardCaption: string;
+  rewardPhoto?: number | null;
+  rewardCaption?: string | null;
   feedbackSuccess: string;
 }
 
@@ -127,35 +129,53 @@ export const quiz = {
   finale: "Você lembra de tudo! 💖",
   questions: [
     {
-      question: "Quem demorou mais pra se arrumar no nosso primeiro encontro?",
-      options: ["Eu", "Você", "Os dois", "Ninguém, chegamos cedo"],
+      question: "Aonde comemoramos o nosso primeiro mês de namoro?",
+      options: ["Cinema", "Cafeteria", "Pastelaria", "Ninguém, chegamos cedo"],
       correctIndex: 1,
       rewardPhoto: PHOTOS.quiz01,
       rewardCaption: "Valeu a espera 💕",
       feedbackSuccess: "Acertou! 💖",
     },
     {
-      question: "Qual foi a nossa primeira viagem juntos?",
-      options: ["Shopping", "Guaramiranga", "Canoa Quebrada"],
+      question: "Qual foi a nossa primeira viagem para praia que fomos?",
+      options: ["Beira Mar", "Iracema", "Águas Belas", "Canoa Quebrada"],
       correctIndex: 2,
       rewardPhoto: PHOTOS.quiz02,
       rewardCaption: "Que viagem boa ✨",
       feedbackSuccess: "Memória de elefante! 🐘",
     },
     {
-      question: "Qual foi a primeira música que a gente ouviu junto?",
-      options: ["Música A", "Música B", "Música C"],
+      question: "Qual o primeiro filme que assistimos no cinema?",
+      options: [
+        "Avatar",
+        "Homem Aranha: um novo dia",
+        "Superman",
+        "Diabo veste prada 2",
+      ],
       correctIndex: 2,
-      rewardPhoto: PHOTOS.quiz03,
-      rewardCaption: "Nossa trilha 🎶",
-      feedbackSuccess: "Essa é a nossa! 🎶",
+      rewardPhoto: null,
+      rewardCaption: null,
+      feedbackSuccess: "'Cause I'm a punk rocker, yes, I am ! 🎶",
+    },
+    {
+      question: "Onde foi realizado o pedido de namoro?",
+      options: [
+        "Moranguinho",
+        "Caminhada",
+        "Na casa do Rei Davi",
+        "Na casinha da Lulu",
+      ],
+      correctIndex: 1,
+      rewardPhoto: null,
+      rewardCaption: null,
+      feedbackSuccess: "Eu estava bastante nervoso 🫣",
     },
     {
       question: "Onde foi o nosso primeiro beijo?",
       options: ["Cinema", "Shopping", "Em casa", "Restaurante"],
       correctIndex: 1,
-      rewardPhoto: PHOTOS.quiz04,
-      rewardCaption: "Pra sempre lembrado 😘",
+      rewardPhoto: null,
+      rewardCaption: null,
       feedbackSuccess: "Perfeito! 😘",
     },
   ] satisfies QuizQuestion[],
